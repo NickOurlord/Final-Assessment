@@ -6,33 +6,21 @@ from numpy import random
 
 #    x = min + (max - min)*random.random()
 
-#population = random.randint(50)
-population = 10
-
-print('population is', population, '\n')
+population = random.randint(50)
+#population = 10
 
 original = np.arange(population) # random.rand
 continuousScale = np.random.rand(population)
 
-finalOpinions = np.arange(population)
+finalOpinions = [0]*population
 
 opinions = []
 finalOpinions55 = []
-
-print('original sample: ')
-print(original, '\n')
 
 for i in range(population):
     x = round(continuousScale[i], 3)
     continuousScale[i] = x
     i += 1
-
-
-print('continuousScale sample ')
-print(continuousScale, '\n')
-
-
-
 
 def subject_and_neighbour(size, sample): # Defaunt
 
@@ -48,22 +36,15 @@ def subject_and_neighbour(size, sample): # Defaunt
 
     num = 0
 
-
-
     for i in range(size):
-
-        #print('num =', num)
 
         if size > 2 and size < 100:
 
             if num > 0 and num+1 != size: # middle
 
-
                 subject = sample[num]
 
                 rightNeighbour = sample[num+1]
-
-
 
                 leftNeighbour = sample[num-1]
 
@@ -72,35 +53,27 @@ def subject_and_neighbour(size, sample): # Defaunt
 
             elif num == size: # maximum case
 
-
                 subject = sample[num-1]
 
                 leftNeighbour = sample[num - 2]
                 rightNeighbour = 0
 
-
                 Left = True
                 Right = False
 
-
             elif num +1 == size:
 
-
                 subject = sample[num]
-
 
                 leftNeighbour = sample[num - 2]
                 rightNeighbour = 0
 
-
                 Left = True
                 Right = False
-
 
             else: # 0th case
 
                 subject = sample[num]
-
 
                 leftNeighbour = 0
                 rightNeighbour = sample[num+1]
@@ -154,7 +127,7 @@ def subject_and_neighbour(size, sample): # Defaunt
 
         #print(neighbourNum)
 
-
+    print('\n final opinions :\n', finalOpinions)
 
 def select_random_neighbour(subject):
     global opinion
@@ -162,7 +135,6 @@ def select_random_neighbour(subject):
     global T
     global Beta
     global neighbour
-
 
     s = random.randint(2)
     neighbourNum = 1
@@ -207,48 +179,41 @@ def select_random_neighbour(subject):
         print('corrupt sample')
 
     opinion = round(opinion, 3)
-
-
-
 def Threshold(value, T, beta):
     global subject2
     global neighbour2
 
-    hi = num -1
-
     subject2 = 0
     neighbour2 = 0
-    #print('op', opinion)
+
     if abs(value) < T:
         subject2 = round(subject + beta*(neighbour - subject), 3)
         neighbour2 = round(subject + beta*(subject - neighbour), 3)
 
-        #print(subject, '+', beta, '*(', neighbour, '-', subject, ')')
-        #print('hor', subject2)
-
     else:
         subject2 = subject     # same as continuous sample
         neighbour2 = neighbour
-        #print('no change', subject2)
 
-    finalOpinions55.append(subject2)
+    finalOpinions[num-1] = subject2
+    finalOpinions[neighbourNum -1] = neighbour2
 
-    print(subject2)
-    print(hi)
-    finalOpinions[hi] = subject2
-    print(finalOpinions[hi])
+def test_defaunt(size, sample):
+    print('population is', population, '\n')
 
+    print('original sample: ')
+    print(original, '\n')
 
-print('final opinions :\n', finalOpinions)
+    print('continuousScale sample ')
+    print(continuousScale, '\n')
 
+    subject_and_neighbour(size, sample)
+
+    print('\n opinions :\n', opinions)
+    print('\n final opinions :\n', finalOpinions)
 
 subject_and_neighbour(population, continuousScale)
 
-print('opinions :\n', opinions)
-print('final opinions55 :\n', finalOpinions55)
-print('final opinions :\n', finalOpinions)
 
-print(subject2)
 
-finalOpinions[num-6]= subject2
-print('final opinions :\n', finalOpinions)
+
+
