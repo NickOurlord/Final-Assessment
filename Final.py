@@ -174,4 +174,4 @@ def select_random_neighbour(subject):
 
 subject_and_neighbour(population, binary)
 
-print('\n', opinions)
+print('opinions :\n', opinions)
