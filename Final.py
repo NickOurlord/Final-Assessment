@@ -473,7 +473,7 @@ class Network:
                     queue.append((neighbour_index, distance + 1))
 
         return float('inf')
-        #Your code for task 3 goes here
+        
 
     def make_random_network(self, N, connection_probability=0.5):
         '''
@@ -493,11 +493,7 @@ class Network:
                     node.connections[neighbour_index] = 1
                     self.nodes[neighbour_index].connections[index] = 1
 
-    #def make_ring_network(self, N, neighbour_range=1):
-        #Your code  for task 4 goes here
 
-    #def make_small_world_network(self, N, re_wire_prob=0.2):
-        #Your code for task 4 goes here
 
     def plot(self):
 
@@ -592,7 +588,7 @@ def calculate_agreement(population, row, col, external=0.0):
             change_in_agreement (float)
     '''
 
-    #Your code for task 1 goes here
+    
 
     return np.random.random() * population
 
@@ -679,11 +675,7 @@ This section contains code for the Defuant Model - task 2 in the assignment
 ==============================================================================================================
 '''
 
-#def defuant_main():
-    #Your code for task 2 goes here
 
-#def test_defuant():
-    #Your code for task 2 goes here
 
 
 '''
@@ -692,8 +684,7 @@ This section contains code for the main function- you should write some code for
 ==============================================================================================================
 '''
 
-#def main():
-    #You should write some code for handling flags here
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Network Analysis')
