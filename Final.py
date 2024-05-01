@@ -165,7 +165,7 @@ if __name__ == '__main__':
         print("Testing the Ising model...")
     elif args.ising_model:
         population = np.random.choice([-1, 1], size = (100,100))
-        ising_main(population, external=0.100, alpha=0.001, frames=100, steps=1000)
+        ising_main(population, args.external, args.alpha, frames=100, steps=1000) 
 
 # Task 2
 #    x = min + (max - min)*random.random()
