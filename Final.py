@@ -395,6 +395,10 @@ class Network:
             self.nodes = []
         else:
             self.nodes = nodes
+
+    # Define arguments of the command lines
+
+
     # calculate the mean degree of the network
     def get_mean_degree(self):
         total_degree = 0
@@ -453,7 +457,7 @@ class Network:
         else:
             return 0
 
-    # Implement breadth-first search (BFS) to find the shortest path between two nodes
+    # Implement breadth-first search to find the shortest path between two nodes
     def bfs_shortest_path(self, start_node, end_node):
         visited = set()
         queue = deque([(start_node, 0)])
@@ -469,6 +473,31 @@ class Network:
                     queue.append((neighbour_index, distance + 1))
 
         return float('inf')
+        #Your code for task 3 goes here
+
+    def make_random_network(self, N, connection_probability=0.5):
+        '''
+        This function makes a *random* network of size N.
+        Each node is connected to each other node with probability p
+        '''
+
+        self.nodes = []
+        for node_number in range(N):
+            value = np.random.random()
+            connections = [0 for _ in range(N)]
+            self.nodes.append(Node(value, node_number, connections))
+
+        for (index, node) in enumerate(self.nodes):
+            for neighbour_index in range(index+1, N):
+                if np.random.random() < connection_probability:
+                    node.connections[neighbour_index] = 1
+                    self.nodes[neighbour_index].connections[index] = 1
+
+    #def make_ring_network(self, N, neighbour_range=1):
+        #Your code  for task 4 goes here
+
+    #def make_small_world_network(self, N, re_wire_prob=0.2):
+        #Your code for task 4 goes here
 
     def plot(self):
 
@@ -496,6 +525,7 @@ class Network:
                     neighbour_y = network_radius * np.sin(neighbour_angle)
 
                     ax.plot((node_x, neighbour_x), (node_y, neighbour_y), color='black')
+
 
 def test_networks():
 
@@ -544,6 +574,149 @@ def test_networks():
     assert(network.mean_path_length()==1), network.mean_path_length()
 
     print("All tests passed")
+
+'''
+==============================================================================================================
+This section contains code for the Ising Model - task 1 in the assignment
+==============================================================================================================
+'''
+
+def calculate_agreement(population, row, col, external=0.0):
+    '''
+    This function should return the extent to which a cell agrees with its neighbours.
+    Inputs: population (numpy array)
+            row (int)
+            col (int)
+            external (float)
+    Returns:
+            change_in_agreement (float)
+    '''
+
+    #Your code for task 1 goes here
+
+    return np.random.random() * population
+
+def ising_step(population, external=0.0):
+    '''
+    This function will perform a single update of the Ising model
+    Inputs: population (numpy array)
+            external (float) - optional - the magnitude of any external "pull" on opinion
+    '''
+
+    n_rows, n_cols = population.shape
+    row = np.random.randint(0, n_rows)
+    col  = np.random.randint(0, n_cols)
+
+    agreement = calculate_agreement(population, row, col, external=0.0)
+
+    if agreement < 0:
+        population[row, col] *= -1
+
+    #Your code for task 1 goes here
+
+def plot_ising(im, population):
+    '''
+    This function will display a plot of the Ising model
+    '''
+
+    new_im = np.array([[255 if val == -1 else 1 for val in rows] for rows in population], dtype=np.int8)
+    im.set_data(new_im)
+    plt.pause(0.1)
+
+def test_ising():
+    '''
+    This function will test the calculate_agreement function in the Ising model
+    '''
+
+    print("Testing ising model calculations")
+    population = -np.ones((3, 3))
+    assert(calculate_agreement(population,1,1)==4), "Test 1"
+
+    population[1, 1] = 1.
+    assert(calculate_agreement(population,1,1)==-4), "Test 2"
+
+    population[0, 1] = 1.
+    assert(calculate_agreement(population,1,1)==-2), "Test 3"
+
+    population[1, 0] = 1.
+    assert(calculate_agreement(population,1,1)==0), "Test 4"
+
+    population[2, 1] = 1.
+    assert(calculate_agreement(population,1,1)==2), "Test 5"
+
+    population[1, 2] = 1.
+    assert(calculate_agreement(population,1,1)==4), "Test 6"
+
+    "Testing external pull"
+    population = -np.ones((3, 3))
+    assert(calculate_agreement(population,1,1,1)==3), "Test 7"
+    assert(calculate_agreement(population,1,1,-1)==5), "Test 8"
+    assert(calculate_agreement(population,1,1,10)==-6), "Test 9"
+    assert(calculate_agreement(population,1,1, -10)==14), "Test 10"
+
+    print("Tests passed")
+
+
+def ising_main(population, alpha=None, external=0.0):
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.set_axis_off()
+    im = ax.imshow(population, interpolation='none', cmap='RdPu_r')
+
+    # Iterating an update 100 times
+    for frame in range(100):
+        # Iterating single steps 1000 times to form an update
+        for step in range(1000):
+            ising_step(population, external)
+        print('Step:', frame, end='\r')
+        plot_ising(im, population)
+
+
+'''
+==============================================================================================================
+This section contains code for the Defuant Model - task 2 in the assignment
+==============================================================================================================
+'''
+
+#def defuant_main():
+    #Your code for task 2 goes here
+
+#def test_defuant():
+    #Your code for task 2 goes here
+
+
+'''
+==============================================================================================================
+This section contains code for the main function- you should write some code for handling flags here
+==============================================================================================================
+'''
+
+#def main():
+    #You should write some code for handling flags here
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Network Analysis')
+    parser.add_argument('-network', type=int, help='Create and plot a random network of specified size')
+    parser.add_argument('-test_network', action='store_true', help='Run test functions')
+
+    args = parser.parse_args()
+
+    if args.network:
+        network = Network()
+        network.make_random_network(args.network)
+        print('mean degree', network.get_mean_degree())
+        print('mean path length', network.mean_path_length())
+        print('clustering_coefficient', network.clustering_coefficient())
+        network.plot()
+        plt.show()
+
+    if args.test_network:
+        test_networks()
+
+
+if __name__ == "__main__":
+    main()
 
 #Task 4
 
