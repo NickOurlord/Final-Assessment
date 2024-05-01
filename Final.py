@@ -379,24 +379,21 @@ subject_and_neighbour(population, continuousScale)
 
 #Task 3
 
-#mean of mean_degree
-def mean_degree(self):
-    total_degree = 0
-    num_nodes = len(self.nodes)
+    # calculate the mean degree of the network
+    def get_mean_degree(self):
+        total_degree = 0
+        num_nodes = len(self.nodes)
 
-    for node in self.nodes:
-        total_degree += sum(node.connections)
+        for node in self.nodes:
+            total_degree += sum(node.connections)
 
-    if num_nodes > 0:
-        return total_degree / num_nodes
-    else:
-        return 0
+        if num_nodes > 0:
+            return total_degree / num_nodes
+        else:
+            return 0
 
-
-
-#mean of clustering_coefficient
-
-def clustering_coefficient(self):
+    # Calculate the clustering coefficient of the network
+    def clustering_coefficient(self):
             total_coefficient = 0
             num_nodes = len(self.nodes)
 
@@ -405,7 +402,7 @@ def clustering_coefficient(self):
                 if num_neighbours > 1:
                     num_possible_connections = (num_neighbours * (num_neighbours - 1)) / 2
                     num_actual_connections = 0
-
+                    # Check actual connections between neighbors
                     neighbour_indices = [i for i, conn in enumerate(node.connections) if conn]
                     for i, neighbour_index in enumerate(neighbour_indices):
                         for j in range(i + 1, len(neighbour_indices)):
@@ -422,9 +419,8 @@ def clustering_coefficient(self):
             else:
                 return 0
 
-
-# mean of mean path plength
-def mean_path_length(self):
+    # Calculate and the mean path length of the network
+    def mean_path_length(self):
         total_path_length = 0
         num_pairs = 0
 
@@ -441,7 +437,8 @@ def mean_path_length(self):
         else:
             return 0
 
-def bfs_shortest_path(self, start_node, end_node):
+    # Implement breadth-first search (BFS) to find the shortest path between two nodes
+    def bfs_shortest_path(self, start_node, end_node):
         visited = set()
         queue = deque([(start_node, 0)])
 
