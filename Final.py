@@ -714,10 +714,6 @@ if __name__ == "__main__":
     if args.test_network:
         test_networks()
 
-
-if __name__ == "__main__":
-    main()
-
 #Task 4
 
 # Create an argument parser to parse command line arguments
