@@ -3,6 +3,7 @@ import argparse
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from numpy import random
+from collections import deque
 
 # Task 1
 def calculate_agreement(population, row, col, external=0.0):
@@ -376,7 +377,85 @@ def test_defaunt(size, sample):
 
 subject_and_neighbour(population, continuousScale)
 
+#Task 3
 
+#mean of mean_degree
+def mean_degree(self):
+    total_degree = 0
+    num_nodes = len(self.nodes)
+
+    for node in self.nodes:
+        total_degree += sum(node.connections)
+
+    if num_nodes > 0:
+        return total_degree / num_nodes
+    else:
+        return 0
+
+
+
+#mean of clustering_coefficient
+
+def clustering_coefficient(self):
+            total_coefficient = 0
+            num_nodes = len(self.nodes)
+
+            for node in self.nodes:
+                num_neighbours = sum(node.connections)
+                if num_neighbours > 1:
+                    num_possible_connections = (num_neighbours * (num_neighbours - 1)) / 2
+                    num_actual_connections = 0
+
+                    neighbour_indices = [i for i, conn in enumerate(node.connections) if conn]
+                    for i, neighbour_index in enumerate(neighbour_indices):
+                        for j in range(i + 1, len(neighbour_indices)):
+                            neighbour_index_2 = neighbour_indices[j]
+                            if self.nodes[neighbour_index_2].connections[neighbour_index]:
+                                num_actual_connections += 1
+
+                    if num_possible_connections > 0:
+                        coefficient = num_actual_connections / num_possible_connections
+                        total_coefficient += coefficient
+
+            if num_nodes > 0:
+                return total_coefficient / num_nodes
+            else:
+                return 0
+
+
+# mean of mean path plength
+def mean_path_length(self):
+        total_path_length = 0
+        num_pairs = 0
+
+        num_nodes = len(self.nodes)
+        for i in range(num_nodes):
+            for j in range(num_nodes):
+                if i != j:
+                    path_length = self.bfs_shortest_path(i, j)
+                    total_path_length += path_length
+                    num_pairs += 1
+
+        if num_pairs > 0:
+            return total_path_length / num_pairs
+        else:
+            return 0
+
+def bfs_shortest_path(self, start_node, end_node):
+        visited = set()
+        queue = deque([(start_node, 0)])
+
+        while queue:
+            node, distance = queue.popleft()
+            if node == end_node:
+                return distance
+            visited.add(node)
+
+            for neighbour_index, connected in enumerate(self.nodes[node].connections):
+                if connected and neighbour_index not in visited:
+                    queue.append((neighbour_index, distance + 1))
+
+        return float('inf')
 #Task 4
 
 # Create an argument parser to parse command line arguments
