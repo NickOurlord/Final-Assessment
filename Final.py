@@ -396,48 +396,49 @@ class Network:
         else:
             self.nodes = nodes
 
-    # Define arguments of the command lines
-
-
+   
     # calculate the mean degree of the network
-    def get_mean_degree(self):
+       def get_mean_degree(self):
         total_degree = 0
+        # Get the number of nodes in the network
         num_nodes = len(self.nodes)
 
         for node in self.nodes:
+            # Sum up the connections of each node
             total_degree += sum(node.connections)
 
         if num_nodes > 0:
             return total_degree / num_nodes
         else:
-            return 0
+            return 0 # Return 0 if there are no nodes in the network
 
     # Calculate the clustering coefficient of the network
     def clustering_coefficient(self):
-            total_coefficient = 0
-            num_nodes = len(self.nodes)
+        total_coefficient = 0
+        # Get the number of nodes in the network
+        num_nodes = len(self.nodes)
 
-            for node in self.nodes:
-                num_neighbours = sum(node.connections)
-                if num_neighbours > 1:
-                    num_possible_connections = (num_neighbours * (num_neighbours - 1)) / 2
-                    num_actual_connections = 0
-                    # Check actual connections between neighbors
-                    neighbour_indices = [i for i, conn in enumerate(node.connections) if conn]
-                    for i, neighbour_index in enumerate(neighbour_indices):
-                        for j in range(i + 1, len(neighbour_indices)):
-                            neighbour_index_2 = neighbour_indices[j]
-                            if self.nodes[neighbour_index_2].connections[neighbour_index]:
-                                num_actual_connections += 1
+        for node in self.nodes:
+            num_neighbours = sum(node.connections)
+            if num_neighbours > 1:
+                num_possible_connections = (num_neighbours * (num_neighbours - 1)) / 2
+                num_actual_connections = 0
+                # Check actual connections between neighbors
+                neighbour_indices = [i for i, conn in enumerate(node.connections) if conn]
+                for i, neighbour_index in enumerate(neighbour_indices):
+                    for j in range(i + 1, len(neighbour_indices)):
+                        neighbour_index_2 = neighbour_indices[j]
+                        if self.nodes[neighbour_index_2].connections[neighbour_index]:
+                            num_actual_connections += 1
 
-                    if num_possible_connections > 0:
-                        coefficient = num_actual_connections / num_possible_connections
-                        total_coefficient += coefficient
+                if num_possible_connections > 0:
+                    coefficient = num_actual_connections / num_possible_connections
+                    total_coefficient += coefficient
 
-            if num_nodes > 0:
-                return total_coefficient / num_nodes
-            else:
-                return 0
+        if num_nodes > 0:
+            return total_coefficient / num_nodes
+        else:
+            return 0
 
     # Calculate and the mean path length of the network
     def mean_path_length(self):
@@ -445,9 +446,11 @@ class Network:
         num_pairs = 0
 
         num_nodes = len(self.nodes)
+        # Iterate through each pair of nodes in the network
         for i in range(num_nodes):
             for j in range(num_nodes):
                 if i != j:
+                    # Find the shortest path length between the pair of nodes
                     path_length = self.bfs_shortest_path(i, j)
                     total_path_length += path_length
                     num_pairs += 1
@@ -458,7 +461,7 @@ class Network:
             return 0
 
     # Implement breadth-first search to find the shortest path between two nodes
-        def bfs_shortest_path(self, start_node, end_node):
+    def bfs_shortest_path(self, start_node, end_node):
         visited = set()
         queue = [(start_node, 0)]
 
@@ -467,7 +470,7 @@ class Network:
             if node == end_node:
                 return distance
             visited.add(node)
-
+            # Explore neighbors of the current node
             for neighbour_index, connected in enumerate(self.nodes[node].connections):
                 if connected and neighbour_index not in visited:
                     queue.append((neighbour_index, distance + 1))
