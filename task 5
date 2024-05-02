@@ -183,4 +183,5 @@ if __name__ == '__main__':
         network.plot()
         print(network.nodes_connected)
         print(network.node_choice)
-print(network.node_choice)
+
+print(network.nodes_connected)
