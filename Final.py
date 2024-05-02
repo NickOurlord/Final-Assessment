@@ -169,214 +169,186 @@ if __name__ == '__main__':
         ising_main(population, args.external, args.alpha, frames=100, steps=1000)
 
 # Task 2
-#    x = min + (max - min)*random.random()
 
-population = random.randint(50)
-#population = 10
+population = random.randint(25,100)  # population is ranged between 25 and 100
 
-original = np.arange(population) # random.rand
-continuousScale = np.random.rand(population)
-
-finalOpinions = [0]*population
+array = np.arange(population)
 
 opinions = []
-finalOpinions55 = []
+subjects = []
+timestep = []
 
-for i in range(population):
+original = np.arange(population)  # the list that contains the original opinions
+continuousScale = np.random.rand(population) # the updated list of original opinions with values in a continuous scale
+
+
+for i in range(population): # appending values between 0 and 1 on a continuous scale to the 'continuous scale' list
     x = round(continuousScale[i], 3)
     continuousScale[i] = x
     i += 1
 
-def subject_and_neighbour(size, sample): # Defaunt
+finalOpinions = continuousScale # creating a duplicate list of the original opinions where updated opinions will be appended to
 
-#    num = size
-    global num
+def number_of_neighbours(size, sample, index):
+    global case
     global subject
     global leftNeighbour
     global rightNeighbour
-
-    global Left       # having a left neighbour
-    global Right      # having a right neighbour
-    global case
-
-    num = 0
-
-    for i in range(size):
-
-        if size > 2 and size < 100:
-
-            if num > 0 and num+1 != size: # middle
-
-                subject = sample[num]
-
-                rightNeighbour = sample[num+1]
-
-                leftNeighbour = sample[num-1]
-
-                Left = True
-                Right = True
-
-            elif num == size: # maximum case
-
-                subject = sample[num-1]
-
-                leftNeighbour = sample[num - 2]
-                rightNeighbour = 0
-
-                Left = True
-                Right = False
-
-            elif num +1 == size:
-
-                subject = sample[num]
-
-                leftNeighbour = sample[num - 2]
-                rightNeighbour = 0
-
-                Left = True
-                Right = False
-
-            else: # 0th case
-
-                subject = sample[num]
-
-                leftNeighbour = 0
-                rightNeighbour = sample[num+1]
-
-                Left = False
-                Right = True
-
-        if size == 2:
-
-            if num > 0:
-
-                subject = sample[num]
-
-                leftNeighbour = sample[num-1]
-                rightNeighbour = 0
-
-                Left = True
-                Right = False
-
-            else:
-
-                subject = sample[num]
-
-                leftNeighbour = 0
-                rightNeighbour = sample[num-1]
-
-                Left = False
-                Right = True
-
-        elif  size == 1:
-
-            #case = 7
-
-            subject = sample[num]
-            print('person is', sample[num], '\n')
-            print('There is only one person in the sample')
-
-            Left = False
-            Right = False
-
-        elif size == 0 or size > 100:
-
-            subject = 0
-            print('corrupt smaple')
-
-        num +=1 # next neighbour
-
-        select_random_neighbour(subject)
-        opinions.append(opinion)
-        Threshold(opinion, 0.2, 0.2)
-
-        #print(neighbourNum)
-
-    print('\n final opinions :\n', finalOpinions)
-
-def select_random_neighbour(subject):
-    global opinion
-    global neighbourNum
-    global T
-    global Beta
     global neighbour
 
-    s = random.randint(2)
-    neighbourNum = 1
+    neighbourNum = 1  # the index of the neighbour
 
-    if population > 2:
-        if Left == True and Right == True: #case 1
+    if size > 2 and size < 100:  # checking if the population is less than 100 and greater than 2
+        if index > 0 and (index + 1) != size:  # middle - subject not on the edge, 2 neighbours
+            #subject = sample[index] # looping through the sample to select every element as the subject
+            rightNeighbour = sample[index + 1]
+            leftNeighbour = sample[index - 1]
+            case = 1
 
-            if s == 0:  # left selected
-                neighbourNum = num - 1
+        elif index == size:  # maximum case - subject is at the end of the list, 1 neighbour
+            #subject = sample[index - 1]
+            leftNeighbour = sample[index - 2] # the subject only has a left neighbour
+            rightNeighbour = 0
+            case = 2
+
+        elif index + 1 == size:  # looping to the last element (opinion), 1 neighbour
+            #subject = sample[index]  # the index of the subject is 'num' since the index of the last element is the list size - 1
+            leftNeighbour = sample[index - 2] # the subject only has a left neighbour
+            rightNeighbour = 0
+            case = 3
+
+        else:  # 0th case - this is the first element (opinion) of the list, 1 neighbour
+            #subject = sample[index]
+            leftNeighbour = 0
+            rightNeighbour = sample[index + 1] # the subject only has a right neighbour
+            case = 4
+
+    elif size == 2: # checking if the population is 2, 1 neighbour
+        if index > 0:  # this subject is at the end of the list
+            #subject = sample[index]
+            leftNeighbour = sample[index - 1] # the subject only has a left neighbour
+            rightNeighbour = 0
+            case = 5
+
+        else:  # this subject is at the beginning of the list
+            #subject = sample[index]
+            leftNeighbour = 0
+            rightNeighbour = sample[index - 1] # the subject only has a right neighbour
+            case = 6
+
+    else :  # checking if the population is 1, 0 , or out of range
+        case = 0
+
+def selectingNeighbours(size, sample, threshold, beta):
+    global neighbourNum
+    global neighbour
+    global opinion
+    global subject
+    global num
+    global s
+
+    subject = 0
+    num = 0 # index of the subject
+    neighbourNum = 0 # the index of the neighbour
+
+    fig, ax = plt.subplots(1, 2)
+
+    for num in range(size):
+        number_of_neighbours(size, sample, num)
+        subject = sample[num]
+        s = random.randint(2)  # variable with two random possible values for selecting the left or right neighbour
+
+        if case == 1: # checking if the subject has both a left and right neighbour
+            if s == 0: # left neighbour is selected
+                neighbourNum = num - 1  # the left neighbour's index is 1 less than the subject's index
                 neighbour = leftNeighbour
-                opinion = subject - neighbour
-
-            elif s == 1:  # right selected
-                neighbourNum = num + 1
+                opinion = subject - neighbour  # the opinion is the difference of the subject and a random neighbour
+            else:
+                neighbourNum = num + 1  # # the right neighbour's index is 1 greater than the subject's index
                 neighbour = rightNeighbour
                 opinion = subject - neighbour
 
-        elif Left == True and Right == False: #case 2 & 3  # left selected
+        elif case == 2 or case ==3 or case == 5: # checking if the subject only has a left neighbour
             neighbourNum = num - 1
             neighbour = leftNeighbour
             opinion = subject - neighbour
 
-        elif Left == False and Right == True: #case 4  # right selected
+        elif case == 4 or case == 6: # checking if the subject only has a right neighbour
             neighbourNum = num + 1
             neighbour = rightNeighbour
             opinion = subject - neighbour
 
-    elif population == 2:
+        opinion = round(opinion, 3)
 
-        if Left == True and Right == False: #case 5  left selected
-            neighbourNum = num - 1
-            neighbour = leftNeighbour
-            opinion = subject - neighbour
+        for i in range(size):
+            ax[1].scatter(array[num], finalOpinions[i], color = 'red')
+            i += 1
 
-        elif Left == False and Right == True: #case 6   right selected
-            neighbourNum = num + 1
-            neighbour = rightNeighbour
-            opinion = subject - neighbour
+        updateOpinion(opinion, sample, threshold, beta)
 
-    else:
-        opinion = 0
-        print('corrupt sample')
+        num += 1
 
-    opinion = round(opinion, 3)
-def Threshold(value, T, beta):
+    for i in range(size):
+        ax[1].scatter(array[num-1], finalOpinions[i], color = 'red') # ploting the final values
+        i += 1
+    ax[0].hist(finalOpinions)
+
+    ax[0].set_xlabel('opinions')
+    ax[1].set_ylabel('opinions')
+    ax[0].set_title('Coupling:' + str(beta))
+    ax[1].set_title('Threshold:' + str(threshold))
+
+    plt.show()
+def updateOpinion(value, sample, threshold, beta):
     global subject2
     global neighbour2
 
     subject2 = 0
     neighbour2 = 0
 
-    if abs(value) < T:
-        subject2 = round(subject + beta*(neighbour - subject), 3)
-        neighbour2 = round(subject + beta*(subject - neighbour), 3)
+    #print('num', num)
+    if abs(value) > threshold:
+
+        subject2 = round(sample[num] + beta * (neighbour - sample[num]), 3)
+        finalOpinions[num] = subject2
+
+        neighbour2 = round(finalOpinions[num] + beta * (finalOpinions[num] - neighbour), 3)
+        finalOpinions[neighbourNum] = neighbour2
 
     else:
-        subject2 = subject     # same as continuous sample
+        subject2 = sample[num]
         neighbour2 = neighbour
 
-    finalOpinions[num-1] = subject2
-    finalOpinions[neighbourNum -1] = neighbour2
+    finalOpinions[num] = subject2
+    finalOpinions[neighbourNum] = neighbour2
 
-def test_defaunt(size, sample):
-    print('population is', population, '\n')
+def defaunt_main(threshold = 0.2, beta = 0.2):
+    global T
+    global Beta
+    global subject2
+    global neighbour2
 
-    print('original sample: ')
-    print(original, '\n')
+    selectingNeighbours(population, continuousScale, threshold, beta)
+    print('completed')
 
-    print('continuousScale sample ')
-    print(continuousScale, '\n')
+def defaunt_test():
+    print(population)
+    selectingNeighbours(population)
+    #print(continuousScale)
+    #print(opinions)
 
-    subject_and_neighbour(size, sample)
+    print('1new sub:', finalOpinions[num])
+    print('2new sub:', finalOpinions[num])
 
-    print('\n opinions :\n', opinions)
-    print('\n final opinions :\n', finalOpinions)
+    print(num, 's', subject, 'to', subject2)
+    print(sample[num], '+', beta, '*', '(', neighbour, '-', sample[num], ')')
+    print(num, 'n', neighbour, 'to', neighbour2)
+    print(finalOpinions[num], '+', beta, '*', '(', finalOpinions[num], '-', neighbour, ')')
+    print(num, 'changed \n')
 
-subject_and_neighbour(population, continuousScale)
+defaunt_main()
+
+
 
 #Task 3
 
