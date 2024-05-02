@@ -158,7 +158,7 @@ if __name__ == '__main__':
 
 
     if args.test_ising:
-        # Here you should define what the test_ising should do
+        # To define what the test_ising should do
         test_ising()
 
     elif args.ising_model:
