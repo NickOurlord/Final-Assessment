@@ -3,7 +3,7 @@ import argparse
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from numpy import random
-from collections import deque
+
 
 # Task 1
 def calculate_agreement(population, row, col, external=0.0):
@@ -458,12 +458,12 @@ class Network:
             return 0
 
     # Implement breadth-first search to find the shortest path between two nodes
-    def bfs_shortest_path(self, start_node, end_node):
+        def bfs_shortest_path(self, start_node, end_node):
         visited = set()
-        queue = deque([(start_node, 0)])
+        queue = [(start_node, 0)]
 
         while queue:
-            node, distance = queue.popleft()
+            node, distance = queue.pop(0)
             if node == end_node:
                 return distance
             visited.add(node)
