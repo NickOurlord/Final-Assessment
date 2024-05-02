@@ -159,7 +159,8 @@ if __name__ == '__main__':
 
     if args.test_ising:
         # Here you should define what the test_ising should do
-        print("Testing the Ising model...")
+        test_ising()
+
     elif args.ising_model:
         population = np.random.choice([-1, 1], size = (100,100))
         ising_main(population, args.external, args.alpha, frames=100, steps=1000)
