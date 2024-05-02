@@ -92,7 +92,7 @@ def plot_ising(im, population):
     This function will display a plot of the Ising model
     '''
 
-    new_im = np.where(population == -1, 255, 1).astype(np.int8)
+    new_im = np.where(population == 1, 255, 1).astype(np.int8)
     im.set_data(new_im)
     plt.pause(0.1)
 
@@ -162,4 +162,4 @@ if __name__ == '__main__':
         print("Testing the Ising model...")
     elif args.ising_model:
         population = np.random.choice([-1, 1], size = (100,100))
-        ising_main(population, external=0.100, alpha=0.001, frames=100, steps=1000)
+        ising_main(population, args.external, args.alpha, frames=100, steps=1000)
