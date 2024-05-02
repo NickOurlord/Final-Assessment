@@ -571,11 +571,7 @@ def test_networks():
 
     print("All tests passed")
 
-'''
-==============================================================================================================
-This section contains code for the Ising Model - task 1 in the assignment
-==============================================================================================================
-'''
+
 
 def calculate_agreement(population, row, col, external=0.0):
     '''
@@ -668,21 +664,6 @@ def ising_main(population, alpha=None, external=0.0):
         print('Step:', frame, end='\r')
         plot_ising(im, population)
 
-
-'''
-==============================================================================================================
-This section contains code for the Defuant Model - task 2 in the assignment
-==============================================================================================================
-'''
-
-
-
-
-'''
-==============================================================================================================
-This section contains code for the main function- you should write some code for handling flags here
-==============================================================================================================
-'''
 
 
 
