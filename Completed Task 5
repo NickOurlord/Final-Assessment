@@ -336,14 +336,14 @@ parser.add_argument('-ring_network', nargs='?', const=10, type=int, help='Genera
 parser.add_argument('-use_network', default=10, type=float, help='Rewire probability for small world network (default: 0.2)')
 parser.add_argument('-re_wire', default=0.2, type=float, help='Rewire probability for small world network (default: 0.2)')
 
-parser.add_argument("-defaunt", action="store_true", help = "This should run the defuant model with default parameters")
+parser.add_argument("-defuant", action="store_true", help = "This should run the defuant model with default parameters")
 parser.add_argument("-beta", type=float, default=0.2, help = "#This should run the defuant model with default threshold and a beta of 0.1")
 parser.add_argument("-threshold", type=float, default=0.2, help = "This should run the defuant model with a threshold of 0.3")
-parser.add_argument("-test_defaunt", action="store_true", help = "This should run the test functions that you have written")
+parser.add_argument("-test_defuant", action="store_true", help = "This should run the test functions that you have written")
 
 args = parser.parse_args()
 
-if args.defaunt:
+if args.defuant:
 
     if args.use_network:
 
