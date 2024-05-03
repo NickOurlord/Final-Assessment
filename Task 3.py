@@ -23,7 +23,6 @@ class Network:
         else:
             self.nodes = nodes
 
-    # Define arguments of the command lines
 
     # calculate the mean degree of the network
     def get_mean_degree(self):
