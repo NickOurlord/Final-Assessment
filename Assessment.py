@@ -699,13 +699,7 @@ parser.add_argument('-test_network', action='store_true', help='Run test functio
 
 
 
-
-parser.add_argument('-ring_network', nargs='?', const=10, type=int,
-                    help='Generate a ring network of specified size (default: 10)')
-# parser.add_argument("-use_network", action="store_true", help = "This should run the defuant model with default parameters")
 parser.add_argument('-use_network', default=10, type=float,
-                    help='Rewire probability for small world network (default: 0.2)')
-parser.add_argument('-re_wire', default=0.2, type=float,
                     help='Rewire probability for small world network (default: 0.2)')
 
 parser.add_argument("-defuant", action="store_true", help="This should run the defuant model with default parameters")
