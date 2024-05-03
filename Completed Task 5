@@ -17,6 +17,8 @@ class Node:
         self.index = number  # Node index
         self.connections = connections  # Node connections
         self.value = value  # Node value
+
+
 class Network:
 
     def __init__(self, nodes=None):
@@ -105,18 +107,18 @@ class Network:
         ax.set_ylim([-1.1 * network_radius, 1.1 * network_radius])  # Set y-axis limits
         # Randomly select a node
         self.random_node = random.choice(self.nodes)
-        #print(f"Randomly selected node: {self.random_node.index}")
+        # print(f"Randomly selected node: {self.random_node.index}")
 
         # Print connections of the randomly selected node
-        #print("Connections:")
+        # print("Connections:")
         self.nodes_connected = []
         for index, connected in enumerate(self.random_node.connections):
             if connected:
-                #print(f"Node {index} is connected.")
+                # print(f"Node {index} is connected.")
                 self.nodes_connected.append(index)
-                #print('zero', self.nodes_connected)
+                # print('zero', self.nodes_connected)
                 self.node_choice = random.choice(self.random_node.connections)
-                #print(self.node_choice)
+                # print(self.node_choice)
         netConnections.append(network.nodes_connected)
 
         # Plot nodes and edges
@@ -140,21 +142,23 @@ class Network:
 
         plt.show()  # Display the plot
 
+
 ############################################################################################################################################
 
-population = random.randint(1,100)  # population is random with an upper bound of 100
+population = random.randint(1, 100)  # population is random with an upper bound of 100
 
 condition = 0
 
 finalOpinions = []
 selectedSample = []
 
-continuousScale = np.random.rand(population) # the updated list of original opinions with values in a continuous scale
+continuousScale = np.random.rand(population)  # the updated list of original opinions with values in a continuous scale
 
-for i in range(population): # appending values between 0 and 1 on a continuous scale to the 'continuous scale' list
+for i in range(population):  # appending values between 0 and 1 on a continuous scale to the 'continuous scale' list
     x = round(continuousScale[i], 3)
     continuousScale[i] = x
     i += 1
+
 
 ########################################################################################################################################
 def number_of_neighbours(size, sample, index):
@@ -208,8 +212,10 @@ def number_of_neighbours(size, sample, index):
             case = 6
 
     else:  # checking if the population is 1, 0 , or out of range
-        print('corrupt sample')# subject = 0
+        print('corrupt sample')  # subject = 0
         sys.exit
+
+
 def selectingNeighbours(size, sample, threshold, beta):
     global neighbourNum
     global neighbour
@@ -220,8 +226,8 @@ def selectingNeighbours(size, sample, threshold, beta):
 
     finalOpinions = sample
     subject = 0
-    num = 0 # index of the subject
-    neighbourNum = 0 # the index of the neighbour
+    num = 0  # index of the subject
+    neighbourNum = 0  # the index of the neighbour
 
     fig, ax = plt.subplots(1, 2)
     array = np.arange(size)
@@ -229,10 +235,10 @@ def selectingNeighbours(size, sample, threshold, beta):
     for num in range(size):
         number_of_neighbours(size, sample, num)
         subject = sample[num]
-        s = random.randint(0,2)  # variable with two random possible values for selecting the left or right neighbour
+        s = random.randint(0, 2)  # variable with two random possible values for selecting the left or right neighbour
 
-        if case == 1: # checking if the subject has both a left and right neighbour
-            if s == 0: # left neighbour is selected
+        if case == 1:  # checking if the subject has both a left and right neighbour
+            if s == 0:  # left neighbour is selected
                 neighbourNum = num - 1  # the left neighbour's index is 1 less than the subject's index
                 neighbour = leftNeighbour
                 opinion = subject - neighbour  # the opinion is the difference of the subject and a random neighbour
@@ -241,12 +247,12 @@ def selectingNeighbours(size, sample, threshold, beta):
                 neighbour = rightNeighbour
                 opinion = subject - neighbour
 
-        elif case == 2 or case ==3 or case == 5: # checking if the subject only has a left neighbour
+        elif case == 2 or case == 3 or case == 5:  # checking if the subject only has a left neighbour
             neighbourNum = num - 1
             neighbour = leftNeighbour
             opinion = subject - neighbour
 
-        elif case == 4 or case == 6: # checking if the subject only has a right neighbour
+        elif case == 4 or case == 6:  # checking if the subject only has a right neighbour
             neighbourNum = num + 1
             neighbour = rightNeighbour
             opinion = subject - neighbour
@@ -254,7 +260,7 @@ def selectingNeighbours(size, sample, threshold, beta):
         opinion = round(opinion, 3)
 
         for i in range(size):
-            ax[1].scatter(array[num], finalOpinions[i], color = 'red')
+            ax[1].scatter(array[num], finalOpinions[i], color='red')
             i += 1
 
         updateOpinion(opinion, sample, threshold, beta)
@@ -269,6 +275,8 @@ def selectingNeighbours(size, sample, threshold, beta):
     ax[1].set_title('Threshold:' + str(threshold))
 
     plt.show()
+
+
 def updateOpinion(value, sample, threshold, beta):
     global subject2
     global neighbour2
@@ -290,33 +298,36 @@ def updateOpinion(value, sample, threshold, beta):
 
     finalOpinions[num] = subject2
     finalOpinions[neighbourNum] = neighbour2
-def defaunt_main(threshold = 0.2, beta = 0.2):
 
+
+def defuant_main(threshold=0.2, beta=0.2):
     global networkPopulation
     networkPopulation = len(connectedNeighbours)
 
     selectedSample = continuousScale
 
     if condition == 1:
-        #networkPopulation = len(connectedNeighbours)
+        # networkPopulation = len(connectedNeighbours)
         selectedSample = connectedNeighbours
 
-        for i in range (networkPopulation):
+        for i in range(networkPopulation):
             x = random.random()
             selectedSample[i] = round(x, 3)
-            i+=1
+            i += 1
         finalOpinions = selectedSample
 
         selectingNeighbours(networkPopulation, selectedSample, threshold, beta)
-    elif condition ==0:
+    elif condition == 0:
 
         selectedSample = continuousScale
         finalOpinions = selectedSample
-        #print(selectedSample)
+        # print(selectedSample)
         selectingNeighbours(population, selectedSample, threshold, beta)
 
     print('completed')
-def defaunt_test(size = population, sample = continuousScale, threshold = 0.2 , beta = 0.2):
+
+
+def defuant_test(size=population, sample=continuousScale, threshold=0.2, beta=0.2):
     print('population is ', size)
     selectingNeighbours(size, sample, threshold, beta)
 
@@ -329,21 +340,28 @@ def defaunt_test(size = population, sample = continuousScale, threshold = 0.2 , 
         print(num, 'changed \n')
         num += 1
 
-parser = argparse.ArgumentParser(description="Defaunt Model")
 
-parser.add_argument('-ring_network', nargs='?', const=10, type=int, help='Generate a ring network of specified size (default: 10)')
-#parser.add_argument("-use_network", action="store_true", help = "This should run the defuant model with default parameters")
-parser.add_argument('-use_network', default=10, type=float, help='Rewire probability for small world network (default: 0.2)')
-parser.add_argument('-re_wire', default=0.2, type=float, help='Rewire probability for small world network (default: 0.2)')
+parser = argparse.ArgumentParser(description="defuant Model")
 
-parser.add_argument("-defaunt", action="store_true", help = "This should run the defuant model with default parameters")
-parser.add_argument("-beta", type=float, default=0.2, help = "#This should run the defuant model with default threshold and a beta of 0.1")
-parser.add_argument("-threshold", type=float, default=0.2, help = "This should run the defuant model with a threshold of 0.3")
-parser.add_argument("-test_defaunt", action="store_true", help = "This should run the test functions that you have written")
+parser.add_argument('-ring_network', nargs='?', const=10, type=int,
+                    help='Generate a ring network of specified size (default: 10)')
+# parser.add_argument("-use_network", action="store_true", help = "This should run the defuant model with default parameters")
+parser.add_argument('-use_network', default=10, type=float,
+                    help='Rewire probability for small world network (default: 0.2)')
+parser.add_argument('-re_wire', default=0.2, type=float,
+                    help='Rewire probability for small world network (default: 0.2)')
+
+parser.add_argument("-defuant", action="store_true", help="This should run the defuant model with default parameters")
+parser.add_argument("-beta", type=float, default=0.2,
+                    help="#This should run the defuant model with default threshold and a beta of 0.1")
+parser.add_argument("-threshold", type=float, default=0.2,
+                    help="This should run the defuant model with a threshold of 0.3")
+parser.add_argument("-test_defuant", action="store_true",
+                    help="This should run the test functions that you have written")
 
 args = parser.parse_args()
 
-if args.defaunt:
+if args.defuant:
 
     if args.use_network:
 
@@ -357,7 +375,7 @@ if args.defaunt:
             connectedNeighbours.append(netConnections[0][i])
             i += 1
 
-        defaunt_main(args.threshold, args.beta)
+        defuant_main(args.threshold, args.beta)
 
     else:
 
@@ -370,15 +388,13 @@ if args.defaunt:
 
         selectedSample = []
 
-        for i in range(population):  # appending values between 0 and 1 on a continuous scale to the 'continuous scale' list
+        for i in range(
+                population):  # appending values between 0 and 1 on a continuous scale to the 'continuous scale' list
             x = round(continuousScale[i], 3)
             continuousScale[i] = x
             i += 1
 
-        defaunt_main(args.threshold, args.beta)
+        defuant_main(args.threshold, args.beta)
 
-elif args.test_defaunt:
-    defaunt_test()
-
-
-####################################################################################################################
+elif args.test_defuant:
+    defuant_test()
