@@ -27,7 +27,7 @@ Each graph is going to be opened in separate windows.
 "python3 FCP_assignment_Task_1.py -ising_model", “python3 FCP_assignment_Task_1.py -ising_model -external -0.1", “python3 FCP_assignment_Task_1.py -ising_model -alpha 10”, and “python3 FCP_assignment_Task_1.py -test_ising”.
 
 
-Task 2
+#Task 2
 
 To run the 'Defaunt' model, type -defaunt in the terminal which will call the 'defaunt_main' function
 The main function has two inputs 'threshold' and 'beta', which are set to 0.2 as default values.
