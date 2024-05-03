@@ -699,13 +699,18 @@ parser.add_argument('-test_network', action='store_true', help='Run test functio
 
 
 
+parser = argparse.ArgumentParser(description="defuant Model")
+#define arguments of the command lines inside the terminal
 parser.add_argument('-ring_network', nargs='?', const=10, type=int,
                     help='Generate a ring network of specified size (default: 10)')
-# parser.add_argument("-use_network", action="store_true", help = "This should run the defuant model with default parameters")
-parser.add_argument('-use_network', default=10, type=float,
-                    help='Rewire probability for small world network (default: 0.2)')
+parser.add_argument('-small_world', nargs='?', const=10, type=int,
+                    help='Generate a small world network of specified size (default: 10)')
 parser.add_argument('-re_wire', default=0.2, type=float,
                     help='Rewire probability for small world network (default: 0.2)')
+
+parser.add_argument('-use_network', default=10, type=float,
+                    help='"This should run the defuant model with default parameters"')
+
 
 parser.add_argument("-defuant", action="store_true", help="This should run the defuant model with default parameters")
 parser.add_argument("-beta", type=float, default=0.2,
@@ -714,14 +719,8 @@ parser.add_argument("-threshold", type=float, default=0.2,
                     help="This should run the defuant model with a threshold of 0.3")
 parser.add_argument("-test_defuant", action="store_true",
                     help="This should run the test functions that you have written")
+args = parser.parse_args()
 
-
-
-
-
-
-  
-    args = parser.parse_args()
 
 
 
@@ -790,7 +789,27 @@ if args.defuant:
 elif args.test_defuant:
     defuant_test()
 
+if __name__ == '__main__':
+    network = Network()  
 
+    #check command line arguments and generate corresponding network
+    if args.ring_network:
+        ring_size = args.ring_network
+        print(f'Creating a size {ring_size} ring network')
+        network.make_ring_network(ring_size)
+        network.plot()
+        
+
+    elif args.small_world:
+        if not 0 <= args.re_wire <= 1:
+            print('Error')
+            quit()
+
+        world_size = args.small_world
+        re_wire_prob = args.re_wire
+        print(f'Creating a size {world_size} small world network with re-wire probability of {re_wire_prob}')
+        network.make_small_world_network(world_size, re_wire_prob)
+        network.plot()
 
 
       
