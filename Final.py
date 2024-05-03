@@ -170,24 +170,11 @@ if __name__ == '__main__':
 
 # Task 2
 
-
 population = random.randint(1,100)  # population is random with an upper bound of 100
-
-
-
-global networkPopulation
-global condition
 
 condition = 0
 
-connectedNeighbours = []
-networkPopulation = len(connectedNeighbours)
-
-if condition == 1:
-    array = np.arange(networkPopulation)
-else:
-    array = np.arange(population)
-
+finalOpinions = []
 selectedSample = []
 
 continuousScale = np.random.rand(population) # the updated list of original opinions with values in a continuous scale
@@ -197,15 +184,6 @@ for i in range(population): # appending values between 0 and 1 on a continuous s
     continuousScale[i] = x
     i += 1
 
-finalOpinions = continuousScale # creating a duplicate list of the original opinions where updated opinions will be appended to
-
-parser = argparse.ArgumentParser(description="Defaunt Model")
-parser.add_argument("-defaunt", action="store_true", help = "This should run the defuant model with default parameters")
-parser.add_argument("-beta", type=float, default=0.2, help = "#This should run the defuant model with default threshold and a beta of 0.1")
-parser.add_argument("-threshold", type=float, default=0.2, help = "This should run the defuant model with a threshold of 0.3")
-parser.add_argument("-test_defaunt", action="store_true", help = "This should run the test functions that you have written")
-
-args = parser.parse_args()
 def number_of_neighbours(size, sample, index):
     global case
     global subject
@@ -219,28 +197,26 @@ def number_of_neighbours(size, sample, index):
     if size > 2 and size < 100:  # checking if the population is less than 100 and greater than 2
         if index > 0 and (index + 1) != size:  # middle - subject not on the edge, 2 neighbours
 
-            # subject = sample[index] # looping through the sample to select every element as the subject
+            # looping through the sample to select every element as the subject
             rightNeighbour = sample[index + 1]
             leftNeighbour = sample[index - 1]
             case = 1
 
         elif index == size:  # maximum case - subject is at the end of the list, 1 neighbour
 
-            # subject = sample[index - 1]
             leftNeighbour = sample[index - 2]  # the subject only has a left neighbour
             rightNeighbour = 0
             case = 2
 
         elif index + 1 == size:  # looping to the last element (opinion), 1 neighbour
 
-            # subject = sample[index]  # the index of the subject is 'num' since the index of the last element is the list size - 1
+            # the index of the subject is 'num' since the index of the last element is the list size - 1
             leftNeighbour = sample[index - 2]  # the subject only has a left neighbour
             rightNeighbour = 0
             case = 3
 
         else:  # 0th case - this is the first element (opinion) of the list, 1 neighbour
 
-            # subject = sample[index]
             leftNeighbour = 0
             rightNeighbour = sample[index + 1]  # the subject only has a right neighbour
             case = 4
@@ -248,14 +224,12 @@ def number_of_neighbours(size, sample, index):
     elif size == 2:  # checking if the population is 2, 1 neighbour
         if index > 0:  # this subject is at the end of the list
 
-            # subject = sample[index]
             leftNeighbour = sample[index - 1]  # the subject only has a left neighbour
             rightNeighbour = 0
             case = 5
 
         else:  # this subject is at the beginning of the list
 
-            # subject = sample[index]
             leftNeighbour = 0
             rightNeighbour = sample[index - 1]  # the subject only has a right neighbour
             case = 6
@@ -271,16 +245,18 @@ def selectingNeighbours(size, sample, threshold, beta):
     global num
     global s
 
+    finalOpinions = sample
     subject = 0
     num = 0 # index of the subject
     neighbourNum = 0 # the index of the neighbour
 
     fig, ax = plt.subplots(1, 2)
+    array = np.arange(size)
 
     for num in range(size):
         number_of_neighbours(size, sample, num)
         subject = sample[num]
-        s = random.randint(2)  # variable with two random possible values for selecting the left or right neighbour
+        s = random.randint(0,2)  # variable with two random possible values for selecting the left or right neighbour
 
         if case == 1: # checking if the subject has both a left and right neighbour
             if s == 0: # left neighbour is selected
@@ -323,7 +299,7 @@ def selectingNeighbours(size, sample, threshold, beta):
 def updateOpinion(value, sample, threshold, beta):
     global subject2
     global neighbour2
-
+    finalOpinions = sample
     subject2 = 0
     neighbour2 = 0
 
@@ -343,6 +319,9 @@ def updateOpinion(value, sample, threshold, beta):
     finalOpinions[neighbourNum] = neighbour2
 def defaunt_main(threshold = 0.2, beta = 0.2):
 
+    global networkPopulation
+    networkPopulation = len(connectedNeighbours)
+
     selectedSample = continuousScale
 
     if condition == 1:
@@ -350,15 +329,17 @@ def defaunt_main(threshold = 0.2, beta = 0.2):
         selectedSample = connectedNeighbours
 
         for i in range (networkPopulation):
-            x = random.rand()
-            print('x',x)
+            x = random.random()
             selectedSample[i] = round(x, 3)
             i+=1
+        finalOpinions = selectedSample
 
         selectingNeighbours(networkPopulation, selectedSample, threshold, beta)
     elif condition ==0:
 
         selectedSample = continuousScale
+        finalOpinions = selectedSample
+        print(selectedSample)
         selectingNeighbours(population, selectedSample, threshold, beta)
 
     print('completed')
@@ -375,8 +356,53 @@ def defaunt_test(size = population, sample = continuousScale, threshold = 0.2 , 
         print(num, 'changed \n')
         num += 1
 
+parser = argparse.ArgumentParser(description="Defaunt Model")
+
+parser.add_argument('-ring_network', nargs='?', const=10, type=int, help='Generate a ring network of specified size (default: 10)')
+parser.add_argument("-use_network", action="store_true", help = "This should run the defuant model with default parameters")
+parser.add_argument('-re_wire', default=0.2, type=float, help='Rewire probability for small world network (default: 0.2)')
+
+parser.add_argument("-defaunt", action="store_true", help = "This should run the defuant model with default parameters")
+parser.add_argument("-beta", type=float, default=0.2, help = "#This should run the defuant model with default threshold and a beta of 0.1")
+parser.add_argument("-threshold", type=float, default=0.2, help = "This should run the defuant model with a threshold of 0.3")
+parser.add_argument("-test_defaunt", action="store_true", help = "This should run the test functions that you have written")
+
+args = parser.parse_args()
+
 if args.defaunt:
-    defaunt_main(args.threshold, args.beta)
+
+    if args.use_network:
+
+        network = Network()
+        condition = 1
+        network.make_small_world_network(10, 0.2)
+        # connectedNeighbours.append(Network.nodes_connected)
+        network.plot()
+
+        for i in range(len(network.nodes_connected)):
+            connectedNeighbours.append(netConnections[0][i])
+            i += 1
+
+        defaunt_main(args.threshold, args.beta)
+
+    else:
+
+        condition = 0
+
+        if condition == 1:
+            array = np.arange(networkPopulation)
+        else:
+            array = np.arange(population)
+
+        selectedSample = []
+
+        for i in range(population):  # appending values between 0 and 1 on a continuous scale to the 'continuous scale' list
+            x = round(continuousScale[i], 3)
+            continuousScale[i] = x
+            i += 1
+
+        defaunt_main(args.threshold, args.beta)
+
 elif args.test_defaunt:
     defaunt_test()
 
@@ -843,6 +869,142 @@ if __name__ == '__main__':
         print(f'Creating a size {world_size} small world network with re-wire probability of {re_wire_prob}')
         network.make_small_world_network(world_size, re_wire_prob)
         network.plot()
+
+
+## Task 5
+
+connectedNeighbours = []
+netConnections = []
+
+# Define a class representing a Node in the network
+class Node:
+
+    def __init__(self, value, number, connections=None):
+        self.index = number  # Node index
+        self.connections = connections  # Node connections
+        self.value = value  # Node value
+class Network:
+
+    def __init__(self, nodes=None):
+
+        if nodes is None:
+            self.nodes = []  # Initialize node array
+        else:
+            self.nodes = nodes
+
+            # Function to create a random network of size N with connection probability p
+
+    def make_random_network(self, N, connection_probability):
+        '''
+        This function creates a random network of size N,
+        where each node is connected to every other node with a given probability p.
+
+        '''
+
+        self.nodes = []  # Initialize node array
+        for node_number in range(N):
+            value = np.random.random()  # Random value for the node
+            connections = [0 for _ in range(N)]  # Initialize connections
+            self.nodes.append(Node(value, node_number, connections))
+
+        # Connect nodes with probability p
+        for (index, node) in enumerate(self.nodes):
+            for neighbour_index in range(index + 1, N):
+                if np.random.random() < connection_probability:
+                    node.connections[neighbour_index] = 1
+                    self.nodes[neighbour_index].connections[index] = 1
+
+    # Function to create a ring network of size N with specified neighbour range
+    def make_ring_network(self, N, neighbour_range=1):
+        '''
+        This function generates a ring network of size N with the specified neighbour range.
+        '''
+        self.nodes = []  # Initialize node array
+        for node_number in range(N):
+            value = np.random.random()  # Random value for the node
+            connectivity = np.zeros(N, dtype=int)  # Initialize connectivity array
+            for i in range(N):
+                if abs(i - node_number) <= neighbour_range and abs(i - node_number) != 0 or abs(
+                        i - node_number) >= N - neighbour_range:
+                    connectivity[i] = 1  # Connect nodes within the specified range
+            self.nodes.append(Node(value, node_number, connectivity))
+
+    # Function to create a small-world network of size N with specified rewire probability
+    def make_small_world_network(self, N, re_wire_prob=0.2):
+        '''
+        This function generates a small-world network of size N with the specified rewire probability.
+        '''
+        self.nodes = []  # Initialize node array
+        for node_number in range(N):
+            value = np.random.random()  # Random value for the node between 0 and 1
+            connectivity = np.zeros(N, dtype=int)  # Initialize connectivity array
+            for i in range(N):
+                if abs(i - node_number) <= 2 and abs(i - node_number) != 0 or abs(i - node_number) >= N - 2:
+                    connectivity[i] = 1  # Connect nodes within the specified range
+            self.nodes.append(Node(value, node_number, connectivity))
+            node_num = 0
+
+        # Rewire edges with a certain probability
+        for node in self.nodes:
+            temp_connections = np.copy(node.connections)
+            for i, connection in enumerate(node.connections):
+                if connection == 1 and np.random.random() < re_wire_prob:  # Find the subject
+                    temp_connections[i] = 0
+
+                    while True:
+                        rand_node = np.random.randint(0, N - 1)
+                        if temp_connections[rand_node] == 0:
+                            temp_connections[rand_node] = 1
+                            break
+            node.connections = np.copy(temp_connections)
+
+    # Function to plot the network
+    def plot(self):
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.set_axis_off()
+
+        num_nodes = len(self.nodes)  # Number of nodes in the network 10
+        network_radius = num_nodes * 10  # Radius of the network visualization
+        ax.set_xlim([-1.1 * network_radius, 1.1 * network_radius])  # Set x-axis limits
+        ax.set_ylim([-1.1 * network_radius, 1.1 * network_radius])  # Set y-axis limits
+        # Randomly select a node
+        self.random_node = random.choice(self.nodes)
+        #print(f"Randomly selected node: {self.random_node.index}")
+
+        # Print connections of the randomly selected node
+        #print("Connections:")
+        self.nodes_connected = []
+        for index, connected in enumerate(self.random_node.connections):
+            if connected:
+                #print(f"Node {index} is connected.")
+                self.nodes_connected.append(index)
+                #print('zero', self.nodes_connected)
+                self.node_choice = random.choice(self.random_node.connections)
+                #print(self.node_choice)
+        netConnections.append(network.nodes_connected)
+
+        # Plot nodes and edges
+        for (i, node) in enumerate(self.nodes):
+            node_angle = i * 2 * np.pi / num_nodes  # Angle of the node in the network
+            node_x = network_radius * np.cos(node_angle)  # x-coordinate of the node
+            node_y = network_radius * np.sin(node_angle)  # y-coordinate of the node
+
+            circle = plt.Circle((node_x, node_y), 0.3 * num_nodes,
+                                color=cm.hot(node.value))  # Circle representing the node
+            ax.add_patch(circle)
+
+            # Plot edges to neighboring nodes
+            for neighbour_index in range(0, num_nodes):
+                if node.connections[neighbour_index]:
+                    neighbour_angle = neighbour_index * 2 * np.pi / num_nodes  # Angle of the neighboring node
+                    neighbour_x = network_radius * np.cos(neighbour_angle)  # x-coordinate of the neighboring node
+                    neighbour_y = network_radius * np.sin(neighbour_angle)  # y-coordinate of the neighboring node
+
+                    ax.plot((node_x, neighbour_x), (node_y, neighbour_y), color='black')  # Plot edge between nodes
+
+        plt.show()  # Display the plot
 
 
 
