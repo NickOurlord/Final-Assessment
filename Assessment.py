@@ -138,6 +138,20 @@ def ising_main(population, external=0.0, alpha = 1, frames=100, steps=1000):
             ising_step(population, alpha, external)
         plot_ising(im, population)
         print('Step:', frame, end='\r')
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
