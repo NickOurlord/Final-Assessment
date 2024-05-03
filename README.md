@@ -75,3 +75,6 @@ Each network graph is going to be opened in separate windows.
  
 Finally for selecting neighbours from a network with the Defuant model, type in -defaunt -use_network
 The Defaunt model would still select lists as inputs by default, but would also accept networks and nodes.
+
+While we were all able to finish our individual task, we wer not able to merge every task into one file due to recurring classes and indenting problems. 
+On the bright side, tasks 2, 4, and 5 are able to be executed with the flags on the termninal and graphs can be plotted accurately.
