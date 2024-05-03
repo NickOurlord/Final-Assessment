@@ -170,17 +170,19 @@ if __name__ == '__main__':
 
 # Task 2
 
-population = random.randint(25,100)  # population is ranged between 25 and 100
+import numpy as np
+import argparse
+import matplotlib.pyplot as plt
+from numpy import random
 
+population = random.randint(100)  # population is random
 array = np.arange(population)
 
 opinions = []
 subjects = []
-timestep = []
 
 original = np.arange(population)  # the list that contains the original opinions
 continuousScale = np.random.rand(population) # the updated list of original opinions with values in a continuous scale
-
 
 for i in range(population): # appending values between 0 and 1 on a continuous scale to the 'continuous scale' list
     x = round(continuousScale[i], 3)
@@ -189,6 +191,13 @@ for i in range(population): # appending values between 0 and 1 on a continuous s
 
 finalOpinions = continuousScale # creating a duplicate list of the original opinions where updated opinions will be appended to
 
+parser = argparse.ArgumentParser(description="Defaunt Model")
+parser.add_argument("-defaunt", action="store_true", help = "This should run the defuant model with default parameters")
+parser.add_argument("-beta", type=float, default=0.2, help = "#This should run the defuant model with default threshold and a beta of 0.1")
+parser.add_argument("-threshold", type=float, default=0.2, help = "This should run the defuant model with a threshold of 0.3")
+parser.add_argument("-test_defaunt", action="store_true", help = "This should run the test functions that you have written")
+
+args = parser.parse_args()
 def number_of_neighbours(size, sample, index):
     global case
     global subject
@@ -200,45 +209,45 @@ def number_of_neighbours(size, sample, index):
 
     if size > 2 and size < 100:  # checking if the population is less than 100 and greater than 2
         if index > 0 and (index + 1) != size:  # middle - subject not on the edge, 2 neighbours
-            #subject = sample[index] # looping through the sample to select every element as the subject
+            # subject = sample[index] # looping through the sample to select every element as the subject
             rightNeighbour = sample[index + 1]
             leftNeighbour = sample[index - 1]
             case = 1
 
         elif index == size:  # maximum case - subject is at the end of the list, 1 neighbour
-            #subject = sample[index - 1]
-            leftNeighbour = sample[index - 2] # the subject only has a left neighbour
+            # subject = sample[index - 1]
+            leftNeighbour = sample[index - 2]  # the subject only has a left neighbour
             rightNeighbour = 0
             case = 2
 
         elif index + 1 == size:  # looping to the last element (opinion), 1 neighbour
-            #subject = sample[index]  # the index of the subject is 'num' since the index of the last element is the list size - 1
-            leftNeighbour = sample[index - 2] # the subject only has a left neighbour
+            # subject = sample[index]  # the index of the subject is 'num' since the index of the last element is the list size - 1
+            leftNeighbour = sample[index - 2]  # the subject only has a left neighbour
             rightNeighbour = 0
             case = 3
 
         else:  # 0th case - this is the first element (opinion) of the list, 1 neighbour
-            #subject = sample[index]
+            # subject = sample[index]
             leftNeighbour = 0
-            rightNeighbour = sample[index + 1] # the subject only has a right neighbour
+            rightNeighbour = sample[index + 1]  # the subject only has a right neighbour
             case = 4
 
-    elif size == 2: # checking if the population is 2, 1 neighbour
+    elif size == 2:  # checking if the population is 2, 1 neighbour
         if index > 0:  # this subject is at the end of the list
-            #subject = sample[index]
-            leftNeighbour = sample[index - 1] # the subject only has a left neighbour
+            # subject = sample[index]
+            leftNeighbour = sample[index - 1]  # the subject only has a left neighbour
             rightNeighbour = 0
             case = 5
 
         else:  # this subject is at the beginning of the list
-            #subject = sample[index]
+            # subject = sample[index]
             leftNeighbour = 0
-            rightNeighbour = sample[index - 1] # the subject only has a right neighbour
+            rightNeighbour = sample[index - 1]  # the subject only has a right neighbour
             case = 6
 
-    else :  # checking if the population is 1, 0 , or out of range
-        case = 0
-
+    else:  # checking if the population is 1, 0 , or out of range
+        print('corrupt sample')# subject = 0
+        sys.exit
 def selectingNeighbours(size, sample, threshold, beta):
     global neighbourNum
     global neighbour
@@ -323,32 +332,27 @@ def updateOpinion(value, sample, threshold, beta):
     finalOpinions[neighbourNum] = neighbour2
 
 def defaunt_main(threshold = 0.2, beta = 0.2):
-    global T
-    global Beta
-    global subject2
-    global neighbour2
 
     selectingNeighbours(population, continuousScale, threshold, beta)
     print('completed')
 
-def defaunt_test():
-    print(population)
-    selectingNeighbours(population)
-    #print(continuousScale)
-    #print(opinions)
+def defaunt_test(size = population, sample = continuousScale, threshold = 0.2 , beta = 0.2):
+    print('population is ', size)
+    selectingNeighbours(size, sample, threshold, beta)
 
-    print('1new sub:', finalOpinions[num])
-    print('2new sub:', finalOpinions[num])
+    for num in range(size):
+        print(num, 's', subject, 'to', subject2)
 
-    print(num, 's', subject, 'to', subject2)
-    print(sample[num], '+', beta, '*', '(', neighbour, '-', sample[num], ')')
-    print(num, 'n', neighbour, 'to', neighbour2)
-    print(finalOpinions[num], '+', beta, '*', '(', finalOpinions[num], '-', neighbour, ')')
-    print(num, 'changed \n')
+        print(sample[num - 1], '+', 0.2, '*', '(', neighbour, '-', sample[num - 1], ')')
+        print(num, 'n', neighbour, 'to', neighbour2)
+        print(finalOpinions[num - 1], '+', beta, '*', '(', finalOpinions[num - 1], '-', neighbour, ')')
+        print(num, 'changed \n')
+        num += 1
 
-defaunt_main()
-
-
+if args.defaunt:
+    defaunt_main(args.threshold, args.beta)
+elif args.test_defaunt:
+    defaunt_test()
 
 #Task 3
 
