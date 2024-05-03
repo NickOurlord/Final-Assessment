@@ -36,6 +36,23 @@ For testing the model, use the flag 'test_defaunt' to call the 'defaunt_test' fu
 
 It should be noted that the graphs may take over a minute to generate when population exceeds 50 as it is a random integer with an upper bound of 100.
 
+#Task 3
+
+The instruction to run the task3 program:
+
+Open the file name ‘the name’ with a Python IDE such as PyCharm or Visual Studio code
+
+The network graph and the data of mean degree, mean path length and clustering coefficient is printed by their corresponding flag names in the terminal of the IDE.
+
+In the terminal, type ‘python3 FCP_task_3.py-’followed by the name at the end.
+
+For example, ‘python3 FCP_task_3.py-network 10’(Once you print the‘python3 FCP_task_3.py-network 10’ you will get the graph and the the data of mean degree, mean path length and clustering coefficient)
+
+The names of two flags are:
+• network 10
+• test_network      
+
+Note: If you could not see  the graph on the window, try to move the mouse to the window, the graph will be shown.
 
 
 #Task 4
