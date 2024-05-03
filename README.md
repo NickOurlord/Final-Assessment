@@ -49,7 +49,7 @@ In the terminal, type ‘python3 FCP_task_3.py-’followed by the name at the en
 For example, ‘python3 FCP_task_3.py-network 10’(Once you print the‘python3 FCP_task_3.py-network 10’ you will get the graph and the the data of mean degree, mean path length and clustering coefficient)
 
 The names of two flags are:
-• network 10
+• network 10  
 • test_network      
 
 Note: If you could not see  the graph on the window, try to move the mouse to the window, the graph will be shown.
