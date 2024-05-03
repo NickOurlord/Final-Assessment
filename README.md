@@ -72,3 +72,6 @@ Note that the value followed by re_wire is variable and ranges between 0.2 and 0
 
 Each network graph is going to be opened in separate windows.
  — “python3 FCP_task_4.py -ring_network 10”, “python3 FCP_task_4.py -small_world 10” and “python3 FCP_task_4.py -small_world 10 -re_wire 0.1”
+ 
+Finally for selecting neighbours from a network with the Defuant model, type in -defaunt -use_network
+The Defaunt model would still select lists as inputs by default, but would also accept networks and nodes.
