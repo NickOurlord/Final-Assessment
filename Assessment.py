@@ -10,7 +10,6 @@ import sys
 connectedNeighbours = []
 netConnections = []
 
-################### Task 5
 # Define a class representing a Node in the network
 class Node:
 
@@ -157,7 +156,7 @@ for i in range(population): # appending values between 0 and 1 on a continuous s
     continuousScale[i] = x
     i += 1
 
-###
+########################################################################################################################################
 def number_of_neighbours(size, sample, index):
     global case
     global subject
@@ -735,8 +734,8 @@ def ising_main(population, alpha=None, external=0.0):
         plot_ising(im, population)
 
 ############ Task 4
-
-class Node:
+'''
+class Node2:
 
     def __init__(self, value, number, connections=None):
         self.index = number  # Node index
@@ -745,7 +744,7 @@ class Node:
 
 
 # Define a class to represent a Network
-class Network:
+class Network2:
 
     def __init__(self, nodes=None):
 
@@ -757,11 +756,7 @@ class Network:
             # Function to create a random network of size N with connection probability p
 
     def make_random_network(self, N, connection_probability):
-        '''
-        This function creates a random network of size N,
-        where each node is connected to every other node with a given probability p.
-
-        '''
+        
 
         self.nodes = []  # Initialize node array
         for node_number in range(N):
@@ -777,10 +772,8 @@ class Network:
                     self.nodes[neighbour_index].connections[index] = 1
 
     # Function to create a ring network of size N with specified neighbour range
-    def make_ring_network(self, N, neighbour_range=1):
-        '''
-        This function generates a ring network of size N with the specified neighbour range.
-        '''
+    def make_ring_network2(self, N, neighbour_range=1):
+       
         self.nodes = []  # Initialize node array
         for node_number in range(N):
             value = np.random.random()  # Random value for the node
@@ -792,10 +785,10 @@ class Network:
             self.nodes.append(Node(value, node_number, connectivity))
 
     # Function to create a small-world network of size N with specified rewire probability
-    def make_small_world_network(self, N, re_wire_prob=0.2):
-        '''
-        This function generates a small-world network of size N with the specified rewire probability.
-        '''
+    def make_small_world_network2(self, N, re_wire_prob=0.2):
+    
+
+
         self.nodes = []  # Initialize node array
         for node_number in range(N):
             value = np.random.random()  # Random value for the node between 0 and 1
@@ -819,7 +812,7 @@ class Network:
             node.connections = np.copy(temp_connections)
 
     # Function to plot the network
-    def plot(self):
+    def plot2(self):
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
@@ -850,19 +843,19 @@ class Network:
                     ax.plot((node_x, neighbour_x), (node_y, neighbour_y), color='black')  # Plot edge between nodes
 
         plt.show()  # Display the plot
-
+'''
 ########
 ######### Parsers
 ########
 
 parser = argparse.ArgumentParser(description="Defaunt Model")
 
-### Task 5
+### Task4
 parser.add_argument('-ring_network', nargs='?', const=10, type=int, help='Generate a ring network of specified size (default: 10)')
 parser.add_argument("-use_network", action="store_true", help = "This should run the defuant model with default parameters")
 parser.add_argument('-re_wire', default=0.2, type=float, help='Rewire probability for small world network (default: 0.2)')
 
-### Task 2/ 5
+### Task2
 parser.add_argument("-defaunt", action="store_true", help = "This should run the defuant model with default parameters")
 parser.add_argument("-beta", type=float, default=0.2, help = "#This should run the defuant model with default threshold and a beta of 0.1")
 parser.add_argument("-threshold", type=float, default=0.2, help = "This should run the defuant model with a threshold of 0.3")
@@ -879,9 +872,9 @@ parser.add_argument('-network', type=int, help='Create and plot a random network
 parser.add_argument('-test_network', action='store_true', help='Run test functions')
 
 ###Task4
-parser.add_argument('-ring_network', nargs='?', const=10, type=int, help='Generate a ring network of specified size (default: 10)')
+#parser.add_argument('-ring_network', nargs='?', const=10, type=int, help='Generate a ring network of specified size (default: 10)')
 parser.add_argument('-small_world', nargs='?', const=10, type=int, help='Generate a small world network of specified size (default: 10)')
-parser.add_argument('-re_wire', default=0.2, type=float, help='Rewire probability for small world network (default: 0.2)')
+#parser.add_argument('-re_wire', default=0.2, type=float, help='Rewire probability for small world network (default: 0.2)')
 
 ################
 #################
@@ -927,14 +920,15 @@ if args.defaunt:
 elif args.test_defaunt:
     defaunt_test()
 
+
  ### Task1
 if args.test_ising:
         # To define what the test_ising should do
         test_ising()
 
-    elif args.ising_model:
-        population = np.random.choice([-1, 1], size = (100,100))
-        ising_main(population, args.external, args.alpha, frames=100, steps=1000)
+elif args.ising_model:
+    population = np.random.choice([-1, 1], size = (100,100))
+    ising_main(population, args.external, args.alpha, frames=100, steps=1000)
 
 ### Task 3
 if args.network:
