@@ -170,18 +170,26 @@ if __name__ == '__main__':
 
 # Task 2
 
-import numpy as np
-import argparse
-import matplotlib.pyplot as plt
-from numpy import random
 
-population = random.randint(100)  # population is random
-array = np.arange(population)
+population = random.randint(1,100)  # population is random with an upper bound of 100
 
-opinions = []
-subjects = []
 
-original = np.arange(population)  # the list that contains the original opinions
+
+global networkPopulation
+global condition
+
+condition = 0
+
+connectedNeighbours = []
+networkPopulation = len(connectedNeighbours)
+
+if condition == 1:
+    array = np.arange(networkPopulation)
+else:
+    array = np.arange(population)
+
+selectedSample = []
+
 continuousScale = np.random.rand(population) # the updated list of original opinions with values in a continuous scale
 
 for i in range(population): # appending values between 0 and 1 on a continuous scale to the 'continuous scale' list
@@ -205,28 +213,33 @@ def number_of_neighbours(size, sample, index):
     global rightNeighbour
     global neighbour
 
+    case = 0
     neighbourNum = 1  # the index of the neighbour
 
     if size > 2 and size < 100:  # checking if the population is less than 100 and greater than 2
         if index > 0 and (index + 1) != size:  # middle - subject not on the edge, 2 neighbours
+
             # subject = sample[index] # looping through the sample to select every element as the subject
             rightNeighbour = sample[index + 1]
             leftNeighbour = sample[index - 1]
             case = 1
 
         elif index == size:  # maximum case - subject is at the end of the list, 1 neighbour
+
             # subject = sample[index - 1]
             leftNeighbour = sample[index - 2]  # the subject only has a left neighbour
             rightNeighbour = 0
             case = 2
 
         elif index + 1 == size:  # looping to the last element (opinion), 1 neighbour
+
             # subject = sample[index]  # the index of the subject is 'num' since the index of the last element is the list size - 1
             leftNeighbour = sample[index - 2]  # the subject only has a left neighbour
             rightNeighbour = 0
             case = 3
 
         else:  # 0th case - this is the first element (opinion) of the list, 1 neighbour
+
             # subject = sample[index]
             leftNeighbour = 0
             rightNeighbour = sample[index + 1]  # the subject only has a right neighbour
@@ -234,12 +247,14 @@ def number_of_neighbours(size, sample, index):
 
     elif size == 2:  # checking if the population is 2, 1 neighbour
         if index > 0:  # this subject is at the end of the list
+
             # subject = sample[index]
             leftNeighbour = sample[index - 1]  # the subject only has a left neighbour
             rightNeighbour = 0
             case = 5
 
         else:  # this subject is at the beginning of the list
+
             # subject = sample[index]
             leftNeighbour = 0
             rightNeighbour = sample[index - 1]  # the subject only has a right neighbour
@@ -297,9 +312,6 @@ def selectingNeighbours(size, sample, threshold, beta):
 
         num += 1
 
-    for i in range(size):
-        ax[1].scatter(array[num-1], finalOpinions[i], color = 'red') # ploting the final values
-        i += 1
     ax[0].hist(finalOpinions)
 
     ax[0].set_xlabel('opinions')
@@ -315,7 +327,6 @@ def updateOpinion(value, sample, threshold, beta):
     subject2 = 0
     neighbour2 = 0
 
-    #print('num', num)
     if abs(value) > threshold:
 
         subject2 = round(sample[num] + beta * (neighbour - sample[num]), 3)
@@ -330,12 +341,27 @@ def updateOpinion(value, sample, threshold, beta):
 
     finalOpinions[num] = subject2
     finalOpinions[neighbourNum] = neighbour2
-
 def defaunt_main(threshold = 0.2, beta = 0.2):
 
-    selectingNeighbours(population, continuousScale, threshold, beta)
-    print('completed')
+    selectedSample = continuousScale
 
+    if condition == 1:
+        #networkPopulation = len(connectedNeighbours)
+        selectedSample = connectedNeighbours
+
+        for i in range (networkPopulation):
+            x = random.rand()
+            print('x',x)
+            selectedSample[i] = round(x, 3)
+            i+=1
+
+        selectingNeighbours(networkPopulation, selectedSample, threshold, beta)
+    elif condition ==0:
+
+        selectedSample = continuousScale
+        selectingNeighbours(population, selectedSample, threshold, beta)
+
+    print('completed')
 def defaunt_test(size = population, sample = continuousScale, threshold = 0.2 , beta = 0.2):
     print('population is ', size)
     selectingNeighbours(size, sample, threshold, beta)
@@ -353,6 +379,7 @@ if args.defaunt:
     defaunt_main(args.threshold, args.beta)
 elif args.test_defaunt:
     defaunt_test()
+
 
 #Task 3
 
